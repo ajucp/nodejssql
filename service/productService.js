@@ -8,7 +8,7 @@ const productCreate=async(name,description,price)=>{
     // console.log('from service layer name',name);
     
     try{
-        const createProduct=await Product.createProduct(name,description,price);
+        const createProduct=await Product.createProduct(name,description,price);//product out put
         // console.log(createProduct);
         // const createProduct=await Product.createUser();
         console.log('service funtn')
@@ -17,11 +17,12 @@ const productCreate=async(name,description,price)=>{
     }
     catch(err){
         console.log(err)
+        throw err
     }
     
 }
 
-const AllProduts=async()=>{
+const allProduts=async()=>{
     try{
         const prodDetils=await Product.fetchProducts()
         console.log('hei i am productdetails form service')
@@ -29,9 +30,10 @@ const AllProduts=async()=>{
     }
     catch(err){
         console.log(err)
+        throw err
     }
     
 }
 
-module.exports={productCreate,AllProduts};
+module.exports={productCreate,allProduts};
 // module.exports=AllProduts;

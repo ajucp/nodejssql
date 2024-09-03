@@ -35,32 +35,33 @@ module.exports =class User{
     }
 
     static fetchUserDetails=async(user_id)=>{
-        console.log('fetch user details')
-        const fetchUser=await db.execute('SELECT email FROM user WHERE id=?',[user_id])
-        // console.log(fetchUser[0])
-        return fetchUser[0]
+        try {
+            console.log('fetch user details')
+            const fetchUser=await db.execute('SELECT email FROM user WHERE id=?',[user_id])
+            // console.log(fetchUser[0])
+            return fetchUser[0]
+        } catch (err) {
+            console.log(err)
+            throw err
+        } 
     }
 
-// async save(){
-//     try{
-//         const newUser=await db.execute('INSERT INTO user(firstName,lastName,email) VALUES(?,?,?)',[this.firstName,this.lastName,this.email]);
-//         return newUser;
-//     }
-//     catch(err){
-//         console.log('user not created',err);
-//         throw err;
-
-//     }
-// }
-    // createUser(){
-
-    //     return db.execute('INSERT INTO user(firstName,lastName,email) VALUES(?,?,?)',[this.firstName,this.lastName,this.email])
-    // }
-
 static fetchAll(){
+    try {
         return db.execute('SELECT * FROM user')
+    } catch (err) {
+        console.log(err)
+        throw err
+    } 
+       
 }
 static findByID(userID){
-    return db.execute('SELECT * FROM user WHERE id = ?',[userID]);
+    try {
+        return db.execute('SELECT * FROM user WHERE id = ?',[userID]);
+    } catch (err) {
+        console.log(err)
+        throw err
+    }
+    
 }
 }

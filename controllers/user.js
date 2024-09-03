@@ -1,4 +1,3 @@
-
 const User=require('../models/user')
 const userCreate=require('../service/userService')
 // import { userCreate } from '../service/userService';
@@ -26,23 +25,6 @@ exports.postCreateUser=async(req,res,next)=>{
 }
 
 
-// exports.postUser=(req,res,next)=>{
-//     const firstName=req.body.firstName;
-//     const lastName=req.body.lastName;
-//     const email=req.body.email;
-
-//     const users=new User(firstName,lastName,email)
-
-//     users.createUser()
-//     .then(result=>{
-//         res.send('user created successfully')
-//     })
-//     .catch(err=>{
-//         console.log(err)
-//         res.send('email already exist')
-//     })
-// }
-
 exports.getUser=(req,res,next)=>{
     User.fetchAll()
     .then(result=>{
@@ -50,6 +32,7 @@ exports.getUser=(req,res,next)=>{
     })
     .catch(err=>{
         console.log(err)
+        throw err
     })
 }
 exports.getUserById=(req,res,next)=>{
@@ -65,6 +48,7 @@ exports.getUserById=(req,res,next)=>{
     })
     .catch(err=>{
         console.log(err)
+        throw err
     })
 }
 

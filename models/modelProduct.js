@@ -1,12 +1,7 @@
 const db=require('../util/database');
 
 module.exports=class Product{
-    constructor(name,description,price){
-        this.name=name;
-        this.description=description;
-        this.price=price;
-    }
-
+   
     static createProduct=async(name,description,price)=>{
 
         try{
@@ -16,6 +11,7 @@ module.exports=class Product{
 
             
             console.log('hai i am form model')
+            //check the product is there in the array
             return product[0]
             // const productdata='i am product'
             // return product
@@ -23,6 +19,7 @@ module.exports=class Product{
         }
         catch(err){
             console.log('MODEL error in products',err)
+            throw err
         }
 
             

@@ -15,23 +15,34 @@ const cartCreate=async(product_id,user_id,quantity)=>{
 // }
 const AllCart=async()=>{
     console.log('cart from service page')
-    const cartDetails=await Cart.getAllCart();
+    const cartDetails=await Cart.getCart();
     return cartDetails
 }
-const addToCart=async (user_id,product_id,quantity)=>{
+const addToCart=async (user_id,product_id,quantity,type)=>{
     try{
-        const existingCartItem=await Cart.getCart(user_id,product_id); //{...}
+        const existingCartItem=await Cart.getCartById(user_id,product_id); //{...}
         // console.log('add cart of service page',existingCartItem[0];
         console.log(existingCartItem,'existing');
        
 
         if(existingCartItem.length > 0){
             console.log("---UPDATING---")
-            const updatedCartitem=await Cart.updateCartItem(user_id,product_id, existingCartItem[0].quantity+quantity)
+
+            let newQunatity=existingCartItem[0].quantity;
+
+            if(type =="add"){
+                newQunatity =(newQunatity+quantity)
+            }
+            else if(type =="sub"){
+                newQunatity=Math.max(0,newQunatity-quantity)
+            }
+            console.log('new quantity',newQunatity)
+            const updateCartitem=await Cart.updateCartItem(user_id,product_id,newQunatity)
+            // const updatedCartitem=await Cart.updateCartItem(user_id,product_id, existingCartItem[0].quantity+quantity)
             // console.log(updatedCartitem)
             // return updatedCartitem
-            if (updatedCartitem==true){
-                return await Cart.getCart(user_id,product_id); 
+            if (updateCartitem==true){
+                return await Cart.getCartById(user_id,product_id); 
             }
             else{
                 return {"message": "Operation failed"}//json message
@@ -39,25 +50,31 @@ const addToCart=async (user_id,product_id,quantity)=>{
         }
         else{
             console.log("---INSERING---")
-            const newCartitem=await Cart.saveCarts(product_id, user_id,quantity)
-            // console.log(updatedCartitem)
-            // return newCartitem
-            if(newCartitem==true){
-                return await Cart.getCart(user_id,product_id)
+            if(type==='add'){
+                const newCartitem=await Cart.saveCarts(product_id, user_id,quantity)
+                if(newCartitem==true){
+                    return await Cart.getCartById(user_id,product_id)
+                }
+                else{
+                    return {"message": "Operation failed"}
+                }
+                
+            }else{
+                return {'message':'item not found in cart'}
             }
-            else{
-                return {"message": "Operation failed"}
-            }
+            console.log(updatedCartitem)
+            return newCartitem
         }
-
+        
     }
     catch(err){
         console.log('error in service',err)
+        throw err
     }
     
 }
 
-const UserCartProduct=async(user_id)=>{
+const getUserCart=async(user_id)=>{// name
     try {
         const userDetails=await User.fetchUserDetails(user_id)
        
@@ -74,15 +91,16 @@ const UserCartProduct=async(user_id)=>{
             // console.log(usercartDetails)
             const userDetailsById={email:userDetails[0].email,totalAmount:totalAmount,cartItems:usercartDetails}
             console.log(userDetailsById)
-            return usercartDetailsById
+            return userDetailsById
         } else{
-            const userCartNotAdded={message:`fetched cart have no items or the email u have given is not founded`}
-            return userCartNotAdded
+            const CartResponce={message:`fetched cart have no items or the email u have given is not founded`}
+            return CartResponce//name
         }
         // return userDetails
     } 
     catch (err) {
         console.log('error in service',err)
+        throw err
     }
     
 }
@@ -93,6 +111,7 @@ const deleteCartProd=async(productID)=>{
         return productdetails
     } catch (err) {
         console.log("---ERROR IN SERVICE PAGE---",err)
+        throw err
     }
     
 }
@@ -107,6 +126,6 @@ module.exports={
     AllCart,
     cartCreate,
     addToCart,
-    UserCartProduct,
+    getUserCart,
     deleteCartProd
 }

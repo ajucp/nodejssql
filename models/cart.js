@@ -2,12 +2,6 @@ const { json } = require('express');
 const db=require('../util/database');
 
 module.exports=class Cart{
-    constructor(id,product_id,user_id,quantity){
-        this.id=id;
-        this.product_id=product_id;
-        this.user_id=user_id;
-        this.quantity=quantity;
-    }
 
     static saveCarts=async(product_id,user_id,quantity)=>{
         console.log('----SAVING NEW ITEM TO CART---')
@@ -23,21 +17,21 @@ module.exports=class Cart{
         }
         
     }
-    static getAllCart=async()=>{
+    static getCart=async()=>{
         console.log('all cart details')
-        const allCartDet=await db.execute('SELECT * FROM cart')
-        return allCartDet[0]
+        const getCartDet=await db.execute('SELECT * FROM cart')
+        return getCartDet[0]
     }
     
-    static getCart=async(user_id,product_id)=>{
+    static getCartById=async(user_id,product_id)=>{
         try{
-            const getCartitem=await db.execute('SELECT * FROM cart WHERE user_id=? AND product_id=?',[user_id,product_id])
+            const getCartItemsById=await db.execute('SELECT * FROM cart WHERE user_id=? AND product_id=?',[user_id,product_id])
             // console.log(getCartitem)
             // console.log(JSON.stringify(getCartitem))
             // console.log(typeof getCartitem)
             console.log('model of adding cart')
             
-            return getCartitem[0]
+            return getCartItemsById[0]
         }
         catch(err){
             console.log('error in model',err)
@@ -95,7 +89,5 @@ module.exports=class Cart{
         }
         
     }
-
-
 
 }

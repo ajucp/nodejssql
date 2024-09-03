@@ -1,7 +1,4 @@
-// const cartCreate=require('../service/cartService')
-// const AllCart=require('../service/cartService')
-const {cartCreate,AllCart,addToCart, UserCartProduct,deleteCartProd}=require('../service/cartService')
-// const updatecart=require('../service/cartService')
+const {cartCreate,AllCart,addToCart, getUserCart,deleteCartProd}=require('../service/cartService')
 const db=require('../models/cart')
 
 exports.postCart=async(req,res,next)=>{
@@ -14,8 +11,8 @@ exports.postCart=async(req,res,next)=>{
         res.send(cartdata)
     }catch(err){
         console.log('error in controller',err)
-    }
-    
+        throw err
+    }    
 }
 
 exports.getCart=async(req,res,next)=>{
@@ -28,27 +25,27 @@ exports.getCart=async(req,res,next)=>{
         // return getAllCart
     }catch(err){
         console.log(err)
+        throw err
     }
-    
-    
 }
 
 exports.postAddcart=async(req,res,next)=>{
     
-
     try{
         const user_id=req.body.user_id
         const product_id=req.body.product_id
         const quantity=req.body.quantity
+        const type=req.body.type
         // console.log(quantity)
         
         console.log('Got from UI')
-        const addCart=await addToCart(user_id,product_id,quantity)
+        const addCart=await addToCart(user_id,product_id,quantity,type)
         console.log(addCart)
         res.send(addCart)  
     }
     catch(err){
         console.log('error in controller',err)
+        throw err
     }
     
 }
@@ -60,16 +57,14 @@ exports.getCartByUserId=async(req,res,next)=>{
 
     try {
         console.log('---GET USER DEATILS--')
-        const getCartbyUser=await UserCartProduct(UserId)
+        const getCartbyUser=await getUserCart(UserId)
         // console.log(getCartbyUser)
         res.send(getCartbyUser)
         
     } catch (err) {
         console.log('error in controller',err)
-    }
-
-    
-    
+        throw err
+    }    
 }
 
 exports.patchCartById=async(req,res,next)=>{
@@ -77,13 +72,13 @@ exports.patchCartById=async(req,res,next)=>{
     // console.log(productQuery)
     try {
         // console.log("hai")
-        
         const deleteCartByProd=await deleteCartProd(productID)
         console.log(deleteCartByProd)
         res.send("product deleted")
     } 
     catch (err) {
         console.log("---ERROR IN CONTROLLER---",err)
+        throw err
     }
     
 }
